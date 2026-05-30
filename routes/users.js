@@ -106,4 +106,46 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+/* ======================================================
+   RESET PASSWORD (DIRECT: EMAIL + NEW PASSWORD)
+====================================================== */
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res.status(400).json({
+        error: "Email and new password are required",
+      });
+    }
+
+    // check if user exists
+    const userCheck = await pool.query(
+      `SELECT * FROM pantrixusers WHERE email=$1`,
+      [email]
+    );
+
+    if (userCheck.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // update password
+    await pool.query(
+      `UPDATE pantrixusers 
+       SET password=$1 
+       WHERE email=$2`,
+      [hashedPassword, email]
+    );
+
+    res.json({
+      message: "Password updated successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 module.exports = router;
