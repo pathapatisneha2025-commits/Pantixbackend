@@ -14,34 +14,34 @@ router.post("/add", async (req, res) => {
       reseller_margin = 0,
     } = req.body;
 
-    const result = await pool.query(
-      `
-      INSERT INTO  pantixcart (
-        user_id,
-        product_id,
-        size,
-        color,
-        qty,
-        reseller_id,
-        reseller_margin
-      )
-      VALUES ($1,$2,$3,$4,$5,$6,$7)
-      ON CONFLICT (user_id, product_id, size, color)
-      DO UPDATE SET
-        qty = cart.qty + EXCLUDED.qty,
-        updated_at = NOW()
-      RETURNING *;
-      `,
-      [
-        user_id,
-        product_id,
-        size,
-        color,
-        qty,
-        reseller_id || null,
-        reseller_margin,
-      ]
-    );
+  const result = await pool.query(
+  `
+  INSERT INTO pantixcart (
+    user_id,
+    product_id,
+    size,
+    color,
+    qty,
+    reseller_id,
+    reseller_margin
+  )
+  VALUES ($1,$2,$3,$4,$5,$6,$7)
+  ON CONFLICT (user_id, product_id, size, color)
+  DO UPDATE SET
+    qty = pantixcart.qty + EXCLUDED.qty,
+    updated_at = NOW()
+  RETURNING *;
+  `,
+  [
+    user_id,
+    product_id,
+    size,
+    color,
+    qty,
+    reseller_id || null,
+    reseller_margin,
+  ]
+);
 
     res.json({
       success: true,
