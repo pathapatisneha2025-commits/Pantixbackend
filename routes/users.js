@@ -73,7 +73,7 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-router.get("/", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT id, name, email, created_at FROM pantrixusers`
