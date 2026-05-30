@@ -29,24 +29,40 @@ router.post("/add", async (req, res) => {
 /* ======================================================
    REMOVE FROM WISHLIST
 ====================================================== */
-router.post("/remove", async (req, res) => {
+router.delete("/remove", async (req, res) => {
   try {
     const { user_id, product_id } = req.body;
 
     if (!user_id || !product_id) {
-      return res.status(400).json({ success: false, error: "Missing fields" });
+      return res.status(400).json({
+        success: false,
+        error: "Missing fields",
+      });
     }
 
-    await pool.query(
+    const result = await pool.query(
       `DELETE FROM pantix_userwishlist
        WHERE user_id = $1 AND product_id = $2`,
       [user_id, product_id]
     );
 
-    res.json({ success: true, message: "Removed from wishlist" });
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Item not found in wishlist",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Removed from wishlist",
+    });
   } catch (err) {
     console.error("Remove wishlist error:", err);
-    res.status(500).json({ success: false, error: "Server error" });
+    res.status(500).json({
+      success: false,
+      error: "Server error",
+    });
   }
 });
 
