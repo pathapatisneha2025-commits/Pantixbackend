@@ -21,6 +21,7 @@ router.post("/place_order", async (req, res) => {
       return res.status(400).json({ error: "user_id is required" });
     }
 
+    // 1️⃣ Create order
     const result = await pool.query(
       `INSERT INTO pantix_orders 
       (user_id, items, total, payment, address, reseller_id, reseller_commission)
@@ -37,17 +38,24 @@ router.post("/place_order", async (req, res) => {
       ]
     );
 
+    // 2️⃣ Clear cart AFTER order success
+    await pool.query(
+      `DELETE FROM  pantixcart WHERE user_id = $1`,
+      [user_id]
+    );
+
     res.json({
       success: true,
       order: result.rows[0],
       id: result.rows[0].id,
+      cartCleared: true, // optional debug flag
     });
+
   } catch (err) {
     console.error("ORDER ERROR:", err);
     res.status(500).json({ error: "Order creation failed" });
   }
 });
-
 //
 // ✅ GET ALL ORDERS (ADMIN DEBUG)
 //
