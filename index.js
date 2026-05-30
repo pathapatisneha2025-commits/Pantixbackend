@@ -7,6 +7,8 @@ const users = require("./routes/users");
 const cart = require("./routes/cart");
 const order = require("./routes/orders");
 const addresses = require("./routes/addresses");
+const wishlist = require("./routes/wishlist");
+
 
 
 
@@ -16,6 +18,8 @@ app.use("/users",users);
 app.use("/cart",cart);
 app.use("/order",order);
 app.use("/addresses",addresses);
+app.use("/wishlist",wishlist);
+
 
 
 app.get("/", (req, res) => {
