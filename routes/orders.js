@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
-const auth = require("./auth");
 
 // CREATE ORDER
 router.post("/place_order", auth, async (req, res) => {
