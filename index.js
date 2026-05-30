@@ -6,6 +6,8 @@ const app = express();
 const users = require("./routes/users");
 const cart = require("./routes/cart");
 const order = require("./routes/orders");
+const addresses = require("./routes/addresses");
+
 
 
 app.use(cors());
@@ -13,6 +15,7 @@ app.use(express.json());
 app.use("/users",users);
 app.use("/cart",cart);
 app.use("/order",order);
+app.use("/addresses",addresses);
 
 
 app.get("/", (req, res) => {
