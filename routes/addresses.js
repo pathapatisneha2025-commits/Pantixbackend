@@ -84,7 +84,28 @@ router.get("/user/:user_id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch addresses" });
   }
 });
+// ===============================
+// 5. GET ALL ADDRESSES (DEBUG / ADMIN)
+// ===============================
+router.get("/all", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM pantix_useraddresses ORDER BY created_at DESC`
+    );
 
+    res.json({
+      success: true,
+      count: result.rows.length,
+      addresses: result.rows,
+    });
+  } catch (err) {
+    console.error("GET ALL ADDRESSES ERROR:", err);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch all addresses",
+    });
+  }
+});
 // ===============================
 // 3. DELETE ADDRESS (optional)
 // ===============================
