@@ -16,7 +16,7 @@ router.post("/add", async (req, res) => {
 
     const result = await pool.query(
       `
-      INSERT INTO cart (
+      INSERT INTO  pantixcart (
         user_id,
         product_id,
         size,
@@ -62,7 +62,7 @@ router.get("/:user_id", async (req, res) => {
     const { user_id } = req.params;
 
     const result = await pool.query(
-      `SELECT * FROM cart WHERE user_id = $1 ORDER BY created_at DESC`,
+      `SELECT * FROM  pantixcart WHERE user_id = $1 ORDER BY created_at DESC`,
       [user_id]
     );
 
@@ -85,7 +85,7 @@ router.delete("/remove", async (req, res) => {
 
     await pool.query(
       `
-      DELETE FROM cart
+      DELETE FROM  pantixcart
       WHERE user_id = $1
       AND product_id = $2
       AND size = $3
@@ -112,7 +112,7 @@ router.put("/update", async (req, res) => {
 
     const result = await pool.query(
       `
-      UPDATE cart
+      UPDATE  pantixcart
       SET qty = $5,
           updated_at = NOW()
       WHERE user_id = $1
@@ -140,7 +140,7 @@ router.delete("/delete/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
 
-    await pool.query(`DELETE FROM cart WHERE user_id = $1`, [user_id]);
+    await pool.query(`DELETE FROM  pantixcart WHERE user_id = $1`, [user_id]);
 
     res.json({
       success: true,
