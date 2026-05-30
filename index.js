@@ -4,10 +4,14 @@ require("dotenv").config();
 
 const app = express();
 const users = require("./routes/users");
+const cart = require("./routes/cart");
+
 
 app.use(cors());
 app.use(express.json());
 app.use("/users",users);
+app.use("/cart",cart);
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
