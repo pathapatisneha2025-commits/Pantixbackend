@@ -5,12 +5,15 @@ require("dotenv").config();
 const app = express();
 const users = require("./routes/users");
 const cart = require("./routes/cart");
+const order = require("./routes/orders");
 
 
 app.use(cors());
 app.use(express.json());
 app.use("/users",users);
 app.use("/cart",cart);
+app.use("/order",order);
+
 
 app.get("/", (req, res) => {
   res.json({
